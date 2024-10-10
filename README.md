@@ -1,4 +1,4 @@
-![GithubCI](https://github.com/sergtyapkin/vue-frontend-template/actions/workflows/deploy.yml/badge.svg)
+![GithubCI](https://github.com/sergtyapkin/nginx-subdomains-proxy/actions/workflows/deploy.yml/badge.svg)
 
 # Прокси-сервер для поддоменов с авто-деплоем на _Nginx_ в докере и автоматическим получением сертификатов _Letsencrypt_
 ## Для настройки необходимо только изменить .env файл
