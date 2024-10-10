@@ -4,6 +4,7 @@
 ## Для настройки необходимо только изменить .env файл
 _(При запуске `make all` скрипт атоматически предоставит интерфейс для его изменения)_
 ```dotenv
+DEBIAN_RELEASE=12-slim
 NGINX_RELEASE=1.23.3-alpine
 COMPOSE_NAME=nginx-subdomains-proxy-compose
 DOMAIN_URL=your.domain.com

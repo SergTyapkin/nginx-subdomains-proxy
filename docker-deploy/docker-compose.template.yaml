@@ -31,6 +31,7 @@ services:
       context: ../
       dockerfile: ./docker-deploy/Dockerfile
       args:
+        - DEBIAN_RELEASE
         - NGINX_RELEASE
         - DOMAIN_URL
         - PROXY_SERVICES_COUNT

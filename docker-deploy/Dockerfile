@@ -1,7 +1,6 @@
+ARG DEBIAN_RELEASE
 ARG NGINX_RELEASE
-FROM nginx:${NGINX_RELEASE:-1.23}
-
-
+FROM debian:${DEBIAN_RELEASE:-12-slim} as build
 ARG DEBIAN_FRONTEND=noninteractive
 USER root
 
@@ -43,11 +42,12 @@ RUN export DOLLAR="$" && \
     for file in *; do envsubst < $file > ../_http-substituted/$file; done && \
     cd /home/nginx-proxy/docker-deploy/nginx/locations/https && \
     mkdir ../_https-substituted && \
-    for file in *; do envsubst < $file > ../_https-substituted/$file; done && \
-    \
-    # copy substituted files into nginx folder \
-    cp /home/nginx-proxy/docker-deploy/nginx/_nginx-substituted.conf /etc/nginx/nginx.conf && \
-    mkdir -p /etc/nginx/include_locations/http && \
-    cp -a /home/nginx-proxy/docker-deploy/nginx/locations/_http-substituted/. /etc/nginx/include_locations/http/ && \
-    mkdir -p /etc/nginx/include_locations/https && \
-    cp -a /home/nginx-proxy/docker-deploy/nginx/locations/_https-substituted/. /etc/nginx/include_locations/https/
+    for file in *; do envsubst < $file > ../_https-substituted/$file; done
+
+
+FROM nginx:${NGINX_RELEASE:-1.27-alpine-slim}
+
+# copy substituted files into nginx folder
+COPY --from=build /home/nginx-proxy/docker-deploy/nginx/_nginx-substituted.conf /etc/nginx/nginx.conf
+COPY --from=build /home/nginx-proxy/docker-deploy/nginx/locations/_http-substituted /etc/nginx/include_locations/http
+COPY --from=build /home/nginx-proxy/docker-deploy/nginx/locations/_https-substituted /etc/nginx/include_locations/https
