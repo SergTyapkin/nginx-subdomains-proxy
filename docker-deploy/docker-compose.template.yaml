@@ -35,6 +35,10 @@ services:
         - NGINX_RELEASE
         - DOMAIN_URL
         - PROXY_SERVICES_COUNT
+        - SUBDOMAINS_PROXY_DOMAIN_URL
+        - DEFAULT_PROXY_DOMAIN_URL
+        - DEFAULT_PROXY_HTTP_PORT
+        - DEFAULT_PROXY_HTTPS_PORT
     volumes:
       - ./dist:/usr/share/nginx/html:rw
       - ./certbot/www:/var/www/certbot/:ro

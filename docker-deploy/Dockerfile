@@ -18,6 +18,10 @@ RUN apt-get update -y && apt-get install --no-install-recommends -y \
 
 ARG DOMAIN_URL
 ARG PROXY_SERVICES_COUNT
+ARG SUBDOMAINS_PROXY_DOMAIN_URL
+ARG DEFAULT_PROXY_DOMAIN_URL
+ARG DEFAULT_PROXY_HTTP_PORT
+ARG DEFAULT_PROXY_HTTPS_PORT
 RUN export DOLLAR="$" && \
     mkdir ./docker-deploy/nginx/locations/_http-not-substituted && \
     mkdir ./docker-deploy/nginx/locations/_https-not-substituted && \
@@ -36,6 +40,10 @@ RUN export DOLLAR="$" && \
     \
     # substitute env variables into nginx.conf and http + https folders \
     export DOMAIN_URL=${DOMAIN_URL} && \
+    export SUBDOMAINS_PROXY_DOMAIN_URL=${SUBDOMAINS_PROXY_DOMAIN_URL} && \
+    export DEFAULT_PROXY_DOMAIN_URL=${DEFAULT_PROXY_DOMAIN_URL} && \
+    export DEFAULT_PROXY_HTTP_PORT=${DEFAULT_PROXY_HTTP_PORT} && \
+    export DEFAULT_PROXY_HTTPS_PORT=${DEFAULT_PROXY_HTTPS_PORT} && \
     envsubst < ./docker-deploy/nginx/nginx.conf > ./docker-deploy/nginx/_nginx-substituted.conf && \
     cd ./docker-deploy/nginx/locations/http && \
     mkdir ../_http-substituted && \
