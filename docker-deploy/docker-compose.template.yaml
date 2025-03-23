@@ -17,7 +17,7 @@ services:
   # To renew certs:
   # docker compose run --rm certbot renew
   certbot:
-    container_name: ${FRONTEND_COMPOSE_NAME:-frontend-compose}-certbot
+    container_name: ${FRONTEND_COMPOSE_NAME:-nginx-subdomains-proxy}-certbot
     image: certbot/certbot:latest
     volumes:
       - ./certbot/www/:/var/www/certbot/:rw
@@ -26,7 +26,7 @@ services:
 
   # Base frontend container. When all certs generated any other nginx containers must be stopped
   nginx:
-    container_name: ${FRONTEND_COMPOSE_NAME:-frontend-compose}-frontend-nginx
+    container_name: ${COMPOSE_NAME:-nginx-subdomains-proxy}
     build:
       context: ../
       dockerfile: ./docker-deploy/Dockerfile
