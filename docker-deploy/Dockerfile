@@ -17,17 +17,16 @@ RUN apt-get update -y && apt-get install --no-install-recommends -y \
 #    nginx-plus-module-brotli
 
 ARG DOMAIN_URL
-ARG PROXY_SERVICES_COUNT
-ARG SUBDOMAINS_PROXY_DOMAIN_URL
 ARG DEFAULT_PROXY_DOMAIN_URL
 ARG DEFAULT_PROXY_HTTP_PORT
 ARG DEFAULT_PROXY_HTTPS_PORT
 RUN export DOLLAR="$" && \
-    mkdir ./docker-deploy/nginx/locations/_http-not-substituted && \
-    mkdir ./docker-deploy/nginx/locations/_https-not-substituted && \
-    for proxy_num in $(seq 1 ${PROXY_SERVICES_COUNT}); do \
+    mkdir -p ./docker-deploy/nginx/locations/_http-not-substituted && \
+    mkdir -p ./docker-deploy/nginx/locations/_https-not-substituted && \
+    for proxy_num in $(seq 1 $(. "docker-deploy/.env"; eval "echo \${PROXY_SERVICES_COUNT}" | tr -dc "0-9")); do \
       export PROXY_NUMBER=${proxy_num} && \
       eval "export PROXY_${proxy_num}_SUBDOMAIN=$(. "docker-deploy/.env"; eval "echo \${PROXY_${proxy_num}_SUBDOMAIN}" | tr -dc "a-zA-Z0-9_.-")" && \
+      eval "export PROXY_${proxy_num}_DOMAIN_URL=$(. "docker-deploy/.env"; eval "echo \${PROXY_${proxy_num}_DOMAIN_URL}" | tr -dc "a-zA-Z0-9_.-")" && \
       eval "export PROXY_${proxy_num}_TARGET_HTTP_PORT=$(. "docker-deploy/.env"; eval "echo \${PROXY_${proxy_num}_TARGET_HTTP_PORT}" | tr -dc "0-9")" && \
       eval "export PROXY_${proxy_num}_TARGET_HTTPS_PORT=$(. "docker-deploy/.env"; eval "echo \${PROXY_${proxy_num}_TARGET_HTTPS_PORT}" | tr -dc "0-9")" && \
       # Copy nginx proxy files into _[***]_not_substituted folder \
@@ -40,16 +39,15 @@ RUN export DOLLAR="$" && \
     \
     # substitute env variables into nginx.conf and http + https folders \
     export DOMAIN_URL=${DOMAIN_URL} && \
-    export SUBDOMAINS_PROXY_DOMAIN_URL=${SUBDOMAINS_PROXY_DOMAIN_URL} && \
     export DEFAULT_PROXY_DOMAIN_URL=${DEFAULT_PROXY_DOMAIN_URL} && \
     export DEFAULT_PROXY_HTTP_PORT=${DEFAULT_PROXY_HTTP_PORT} && \
     export DEFAULT_PROXY_HTTPS_PORT=${DEFAULT_PROXY_HTTPS_PORT} && \
     envsubst < ./docker-deploy/nginx/nginx.conf > ./docker-deploy/nginx/_nginx-substituted.conf && \
     cd ./docker-deploy/nginx/locations/http && \
-    mkdir ../_http-substituted && \
+    mkdir -p ../_http-substituted && \
     for file in *; do envsubst < $file > ../_http-substituted/$file; done && \
     cd ../https && \
-    mkdir ../_https-substituted && \
+    mkdir -p ../_https-substituted && \
     for file in *; do envsubst < $file > ../_https-substituted/$file; done
 
 
