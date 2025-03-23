@@ -27,9 +27,9 @@ RUN export DOLLAR="$" && \
     mkdir ./docker-deploy/nginx/locations/_https-not-substituted && \
     for proxy_num in $(seq 1 ${PROXY_SERVICES_COUNT}); do \
       export PROXY_NUMBER=${proxy_num} && \
-      eval "export PROXY_${proxy_num}_SUBDOMAIN=$(. "docker-deploy/.env"; eval "echo \${PROXY_${proxy_num}_SUBDOMAIN}" | tr -dc [a-zA-Z0-9\_\.\-])" && \
-      eval "export PROXY_${proxy_num}_TARGET_HTTP_PORT=$(. "docker-deploy/.env"; eval "echo \${PROXY_${proxy_num}_TARGET_HTTP_PORT}" | tr -dc [0-9])" && \
-      eval "export PROXY_${proxy_num}_TARGET_HTTPS_PORT=$(. "docker-deploy/.env"; eval "echo \${PROXY_${proxy_num}_TARGET_HTTPS_PORT}" | tr -dc [0-9])" && \
+      eval "export PROXY_${proxy_num}_SUBDOMAIN=$(. "docker-deploy/.env"; eval "echo \${PROXY_${proxy_num}_SUBDOMAIN}" | tr -dc "a-zA-Z0-9_.-")" && \
+      eval "export PROXY_${proxy_num}_TARGET_HTTP_PORT=$(. "docker-deploy/.env"; eval "echo \${PROXY_${proxy_num}_TARGET_HTTP_PORT}" | tr -dc "0-9")" && \
+      eval "export PROXY_${proxy_num}_TARGET_HTTPS_PORT=$(. "docker-deploy/.env"; eval "echo \${PROXY_${proxy_num}_TARGET_HTTPS_PORT}" | tr -dc "0-9")" && \
       # Copy nginx proxy files into _[***]_not_substituted folder \
       cp ./docker-deploy/nginx/proxy_http.template.conf ./docker-deploy/nginx/locations/_http-not-substituted/proxy_${proxy_num}_http.conf  && \
       cp ./docker-deploy/nginx/proxy_https.template.conf ./docker-deploy/nginx/locations/_https-not-substituted/proxy_${proxy_num}_https.conf  && \
