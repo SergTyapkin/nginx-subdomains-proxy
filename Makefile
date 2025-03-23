@@ -59,8 +59,8 @@ all:
 	make install-docker-if-not-exists
 	make setup-env-file
 	make generate-docker-compose
-	make generate-certs
-	make setup-auto-renewing-certs
+	#make generate-certs
+	#make setup-auto-renewing-certs
 	make down
 	make setup-ci
 	make update

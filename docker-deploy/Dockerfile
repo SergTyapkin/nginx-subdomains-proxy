@@ -23,7 +23,7 @@ RUN export DOLLAR="$" && \
     mkdir ./docker-deploy/nginx/locations/_https-not-substituted && \
     for proxy_num in $(seq 1 ${PROXY_SERVICES_COUNT}); do \
       export PROXY_NUMBER=${proxy_num} && \
-      eval "export PROXY_${proxy_num}_SUBDOMAIN=$(. "docker-deploy/.env"; eval "echo \${PROXY_${proxy_num}_SUBDOMAIN}" | tr -dc [a-zA-Z0-9\_\-\.])" && \
+      eval "export PROXY_${proxy_num}_SUBDOMAIN=$(. "docker-deploy/.env"; eval "echo \${PROXY_${proxy_num}_SUBDOMAIN}" | tr -dc [a-zA-Z0-9\_\.\-])" && \
       eval "export PROXY_${proxy_num}_TARGET_HTTP_PORT=$(. "docker-deploy/.env"; eval "echo \${PROXY_${proxy_num}_TARGET_HTTP_PORT}" | tr -dc [0-9])" && \
       eval "export PROXY_${proxy_num}_TARGET_HTTPS_PORT=$(. "docker-deploy/.env"; eval "echo \${PROXY_${proxy_num}_TARGET_HTTPS_PORT}" | tr -dc [0-9])" && \
       # Copy nginx proxy files into _[***]_not_substituted folder \
@@ -37,10 +37,10 @@ RUN export DOLLAR="$" && \
     # substitute env variables into nginx.conf and http + https folders \
     export DOMAIN_URL=${DOMAIN_URL} && \
     envsubst < ./docker-deploy/nginx/nginx.conf > ./docker-deploy/nginx/_nginx-substituted.conf && \
-    cd /home/nginx-proxy/docker-deploy/nginx/locations/http && \
+    cd ./docker-deploy/nginx/locations/http && \
     mkdir ../_http-substituted && \
     for file in *; do envsubst < $file > ../_http-substituted/$file; done && \
-    cd /home/nginx-proxy/docker-deploy/nginx/locations/https && \
+    cd ../https && \
     mkdir ../_https-substituted && \
     for file in *; do envsubst < $file > ../_https-substituted/$file; done
 
