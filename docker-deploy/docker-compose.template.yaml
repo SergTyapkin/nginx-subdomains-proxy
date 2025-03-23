@@ -1,8 +1,8 @@
-name: ${FRONTEND_COMPOSE_NAME:-frontend-compose}
+name: ${COMPOSE_NAME:-nginx-subdomains-proxy}
 services:
    # Needs to serve only http and get certs when certs is not created yet
   nginx-certbot:
-    container_name: ${FRONTEND_COMPOSE_NAME:-frontend-compose}-nginx-certbot
+    container_name: ${COMPOSE_NAME:-nginx-subdomains-proxy}-nginx-certbot
     image: nginx:${NGINX_RELEASE}
     volumes:
       - ./nginx/nginx_certbot.conf:/etc/nginx/nginx.conf:ro
@@ -17,7 +17,7 @@ services:
   # To renew certs:
   # docker compose run --rm certbot renew
   certbot:
-    container_name: ${FRONTEND_COMPOSE_NAME:-nginx-subdomains-proxy}-certbot
+    container_name: ${COMPOSE_NAME:-nginx-subdomains-proxy}-certbot
     image: certbot/certbot:latest
     volumes:
       - ./certbot/www/:/var/www/certbot/:rw
