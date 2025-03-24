@@ -34,7 +34,7 @@ services:
         - DEBIAN_RELEASE
         - NGINX_RELEASE
         - DOMAIN_URL
-        - DEFAULT_PROXY_DOMAIN_URL
+        - DEFAULT_PROXY_TARGET_HOST
         - DEFAULT_PROXY_HTTP_PORT
         - DEFAULT_PROXY_HTTPS_PORT
     volumes:
