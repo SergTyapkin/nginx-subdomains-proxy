@@ -29,8 +29,13 @@ RUN export DOLLAR="$" && \
       eval "export PROXY_${proxy_num}_TARGET_HOST=$(. "docker-deploy/.env"; eval "echo \${PROXY_${proxy_num}_TARGET_HOST}" | tr -dc "a-zA-Z0-9_.-")" && \
       eval "export PROXY_${proxy_num}_TARGET_HTTP_PORT=$(. "docker-deploy/.env"; eval "echo \${PROXY_${proxy_num}_TARGET_HTTP_PORT}" | tr -dc "0-9")" && \
       eval "export PROXY_${proxy_num}_TARGET_HTTPS_PORT=$(. "docker-deploy/.env"; eval "echo \${PROXY_${proxy_num}_TARGET_HTTPS_PORT}" | tr -dc "0-9")" && \
+      # Check that current proxy HTTP_PORT is none and we needs to redirect it on HTTPS \
       # Copy nginx proxy files into _[***]_not_substituted folder \
-      cp ./docker-deploy/nginx/proxy_http.template.conf ./docker-deploy/nginx/locations/_http-not-substituted/proxy_${proxy_num}_http.conf  && \
+      if [ -z "$(eval "echo \${PROXY_${proxy_num}_TARGET_HTTP_PORT}")" ]; then \
+        cp ./docker-deploy/nginx/proxy_http_redirect.template.conf ./docker-deploy/nginx/locations/_http-not-substituted/proxy_${proxy_num}_http.conf; \
+      else \
+        cp ./docker-deploy/nginx/proxy_http.template.conf ./docker-deploy/nginx/locations/_http-not-substituted/proxy_${proxy_num}_http.conf; \
+      fi && \
       cp ./docker-deploy/nginx/proxy_https.template.conf ./docker-deploy/nginx/locations/_https-not-substituted/proxy_${proxy_num}_https.conf  && \
       # Envsubst the .conf files into http or https folder \
       envsubst < ./docker-deploy/nginx/locations/_http-not-substituted/proxy_${proxy_num}_http.conf > ./docker-deploy/nginx/locations/http/proxy_${proxy_num}_http.conf && \
