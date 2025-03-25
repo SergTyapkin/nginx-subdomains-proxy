@@ -49,6 +49,11 @@ RUN export DOLLAR="$" && \
     export DEFAULT_PROXY_HTTPS_PORT=${DEFAULT_PROXY_HTTPS_PORT} && \
     envsubst < ./docker-deploy/nginx/nginx.conf > ./docker-deploy/nginx/_nginx-substituted.conf && \
     cd ./docker-deploy/nginx/locations/http && \
+    if [ -z "${DEFAULT_PROXY_HTTP_PORT}" ]; then \
+      rm default_proxy.conf; \
+    else \
+      rm default_proxy_redirect.conf; \
+    fi && \
     mkdir -p ../_http-substituted && \
     for file in *; do envsubst < $file > ../_http-substituted/$file; done && \
     cd ../https && \
