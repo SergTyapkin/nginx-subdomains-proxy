@@ -26,22 +26,23 @@ PROXY_1_NETWORK_NAME=subdomain1-frontend-proxy
 #------------------------------------------
 PROXY_2_SUBDOMAIN=subdomain2
 PROXY_2_TARGET_HOST=127.0.0.1
-PROXY_2_TARGET_HTTP_PORT=4002
-PROXY_2_TARGET_HTTPS_PORT=5002
+#PROXY_2_TARGET_HTTP_PORT=4002
+PROXY_2_TARGET_HTTPS_PORT=5001
 PROXY_2_NETWORK_NAME=subdomain2-frontend-proxy
 #------------------------------------------
 ```
 > В этой конфигурации прокирование бцдет осуществляться по такой схеме: <br>
-> `your.domain.com:80` -> `your.domain.com:8080`
-> `your.domain.com:443` -> `your.domain.com:8081`
+> `http://your.domain.com` -> `your.domain.com:8080`
+> `https://your.domain.com` -> `your.domain.com:8081`
 > 
-> `subdomain1.your.domain.com:80` -> `your.domain.com:4001`
-> `subdomain1.your.domain.com:443` -> `your.domain.com:5001`
+> `http://subdomain1.your.domain.com` -> `your.domain.com:4001`
+> `https://subdomain1.your.domain.com` -> `your.domain.com:5001`
 > 
-> `subdomain2.your.domain.com:80` -> `your.domain.com:4002`
-> `subdomain2.your.domain.com:443` -> `your.domain.com:5002`
+> `http://subdomain2.your.domain.com` -> `https://subdomain2.your.domain.com`
+> `https://subdomain2.your.domain.com` -> `your.domain.com:5001`
 
-> (Фронтенд для subdomain1 доджен прослушивать порт 4001 для http-запросов, и 5001 для https-запросов)
+> (Фронтенд для subdomain1 должен прослушивать порт 4001 для http-запросов, и 5001 для https-запросов)
+> (Фронтенд для subdomain2 должен прослушивать только порт 5001 для http-запросов. Прокси будет преобразовывать их в https. Кроме того, http-запросы будут переадресовываться на https)
 
 > [!TIP]
 > Для добавления нового проксирования с нового поддомена будет необходимо лишь **увеличить `PROXY_SERVICES_COUNT` на 1**,
